@@ -62,3 +62,25 @@ func GenerateRandomIds(n uint32, lower uint32, upper uint32) ([]uint32, error) {
 	}
 	return output, nil
 }
+
+func BuildHeroTeam(heroes [5]types.Hero) types.Team {
+	goodAlignment := 0
+
+	for _, hero := range heroes {
+		if hero.Biography.Alignment == "good" {
+			goodAlignment += 1
+		}
+	}
+	teamAlignment := "bad"
+
+	if goodAlignment >= 3 {
+		teamAlignment = "good"
+	}
+
+	team := types.Team{
+		Heroes:    heroes,
+		Alignment: teamAlignment,
+	}
+
+	return team
+}

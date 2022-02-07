@@ -20,3 +20,8 @@ type Hero struct {
 type Bio struct {
 	Alignment string `json:"alignment,omitempty"`
 }
+
+type Team struct {
+	Heroes    [5]Hero
+	Alignment string
+}
