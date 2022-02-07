@@ -1,5 +1,7 @@
 package types
 
+import "math/rand"
+
 type Stats struct {
 	Intelligence  uint32 `json:"intelligence,string,omitempty"`
 	Strength      uint32 `json:"strength,string,omitempty"`
@@ -11,10 +13,11 @@ type Stats struct {
 }
 
 type Hero struct {
-	Id         uint32 `json:"id,string,omitempty"`
-	Name       string `json:"name,omitempty"`
-	PowerStats Stats  `json:"powerstats,omitempty"`
-	Biography  Bio    `json:biography,omitempty`
+	Id                   uint32 `json:"id,string,omitempty"`
+	Name                 string `json:"name,omitempty"`
+	PowerStats           Stats  `json:"powerstats,omitempty"`
+	Biography            Bio    `json:biography,omitempty`
+	FiliationCoefficient float32
 }
 
 type Bio struct {
@@ -24,4 +27,36 @@ type Bio struct {
 type Team struct {
 	Heroes    [5]Hero
 	Alignment string
+}
+
+func (team *Team) UpdateFiliationCoefficient() {
+	for i, hero := range team.Heroes {
+		if hero.Biography.Alignment == team.Alignment {
+			team.Heroes[i].FiliationCoefficient = float32(1 + rand.Intn(10))
+		} else {
+			team.Heroes[i].FiliationCoefficient = 1.0 / float32(1+rand.Intn(10))
+		}
+	}
+}
+
+func BuildHeroTeam(heroes [5]Hero) Team {
+	goodAlignment := 0
+
+	for _, hero := range heroes {
+		if hero.Biography.Alignment == "good" {
+			goodAlignment += 1
+		}
+	}
+	teamAlignment := "bad"
+
+	if goodAlignment >= 3 {
+		teamAlignment = "good"
+	}
+
+	team := Team{
+		Heroes:    heroes,
+		Alignment: teamAlignment,
+	}
+
+	return team
 }
