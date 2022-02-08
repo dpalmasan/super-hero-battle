@@ -8,9 +8,9 @@ import (
 )
 
 type emailConf struct {
-	To              string `yaml:"to"`
-	MailgunUsername string `yaml:"mailgun-username"`
-	MailgunPassword string `yaml:"mailgun-password"`
+	To        string `yaml:"to"`
+	ApiDomain string `yaml:"api-domain"`
+	ApiKey    string `yaml:"api-key"`
 }
 
 type conf struct {

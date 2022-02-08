@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
-	"net/smtp"
 	"os"
+	"time"
 
-	"github.com/jordan-wright/email"
+	"github.com/mailgun/mailgun-go/v4"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 	"github.com/super-hero-battle/config"
@@ -122,13 +123,23 @@ func main() {
 	output += fmt.Sprintf("Team %d won the battle!\n", won)
 	fmt.Print(output)
 
-	e := email.NewEmail()
-	e.From = "Test Hero Battle <test-hero-battle@test.io>"
-	e.To = []string{config.Params.Email.To}
-	e.Subject = "Epic Hero Battle!"
-	e.Text = []byte(output)
-	err = e.Send("smtp.mailgun.org:587", smtp.PlainAuth("", config.Params.Email.MailgunUsername, config.Params.Email.MailgunPassword, "smtp.mailgun.org"))
+	mg := mailgun.NewMailgun(config.Params.Email.ApiDomain, config.Params.Email.ApiKey)
+
+	sender := "super-hero-battle@test.io"
+	subject := "Epic Hero Battle!!"
+	body := output
+	recipient := config.Params.Email.To
+
+	// The message object allows you to add attachments and Bcc recipients
+	message := mg.NewMessage(sender, subject, body, recipient)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	// Send the message with a 10 second timeout
+	_, _, err = mg.Send(ctx, message)
+
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
