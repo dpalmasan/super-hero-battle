@@ -1,6 +1,9 @@
 package types
 
-import "math/rand"
+import (
+	"errors"
+	"math/rand"
+)
 
 type Stats struct {
 	Intelligence float32 `json:"intelligence,string,omitempty"`
@@ -52,6 +55,32 @@ func (hero *Hero) updateHeroStats() {
 	hero.PowerStats.Power = updateStat(hero.PowerStats.Power, hero.FiliationCoefficient)
 	hero.PowerStats.Speed = updateStat(hero.PowerStats.Speed, hero.FiliationCoefficient)
 	hero.updateHp()
+}
+
+func (hero *Hero) mentalAttack() float32 {
+	return (hero.PowerStats.Intelligence*0.7 + hero.PowerStats.Speed*0.2 + hero.PowerStats.Combat*0.1) * hero.FiliationCoefficient
+}
+
+func (hero *Hero) strongAttack() float32 {
+	return (hero.PowerStats.Strength*0.6 + hero.PowerStats.Power*0.2 + hero.PowerStats.Combat*0.2) * hero.FiliationCoefficient
+}
+
+func (hero *Hero) fastAttack() float32 {
+	return (hero.PowerStats.Speed*0.55 + hero.PowerStats.Durability*0.25 + hero.PowerStats.Strength*0.2) * hero.FiliationCoefficient
+}
+
+func (hero *Hero) Attack() float32 {
+	attackType := rand.Intn(3)
+	switch attackType {
+	case 0:
+		return hero.mentalAttack()
+	case 1:
+		return hero.strongAttack()
+	case 2:
+		return hero.fastAttack()
+	}
+
+	panic(errors.New("Unknown attack type!"))
 }
 
 func (team *Team) UpdateFiliationCoefficient() {
