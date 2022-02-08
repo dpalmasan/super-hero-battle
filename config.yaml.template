@@ -1,7 +1,7 @@
-api-key: "YOUR API KEY FOR HERO API"
+api-key: "YOUR SUPER HERO API KEY"
 hero-id-lower: 1
 hero-id-upper: 731
 email:
-  to: "EMAIL RECIPIENT"
-  mailgun-username: "MAILGUN SMTP USERNAME"
-  mailgun-password: "MAILGUN SMTP PASSWORD"
+  to: "RECIPIENT EMAIL"
+  api-domain: "MAILGUN DOMAIN"
+  api-key: "MAILGUN API KEY"
